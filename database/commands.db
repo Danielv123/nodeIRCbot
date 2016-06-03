@@ -1,0 +1,7 @@
+{"name":"!help","result":"Im a bot. Beep boop.","_id":"dA905kOrrpP9gSIv"}
+{"name":"!addcmd","result":"Im learning, yay!","js":"message = wordify(text); returnString = \"\"; for(i = 2;message.length > i;i++){returnString = returnString + \" \" + message[i]};db.commands.addcommand({name:message[1], result:returnString});","_id":"ffUwIMdNEbXAL4qr"}
+{"name":"!releasedate","result":" hanziq has the answer! https://www.reddit.com/r/factorio/comments/4me2g9/hanziq_confirmed_013_is_not_coming_today/","_id":"gYB3XNpGihI5qG6D"}
+{"name":"!commands","result":"","js":"db.commands.find({}, function(err,doc){result = \"\"; doc.forEach(function(entry) {result = result + \", \" + entry.name;}); bot.say(from, \"Commands: \" + result);})","_id":"zJ0KBBAeQG9L1umQ"}
+{"name":"!help","result":"Im a bot. Beep boop.","_id":"dA905kOrrpP9gSIv"}
+{"name":"!addcmd","result":"Im learning, yay!","js":"message = wordify(text); returnString = \"\"; for(i = 2;message.length > i;i++){returnString = returnString + \" \" + message[i]};db.commands.addcommand({name:message[1], result:returnString});","_id":"ffUwIMdNEbXAL4qr"}
+{"name":"!commands","result":"","js":"db.commands.find({}, function(err,doc){result = \"\"; doc.forEach(function(entry) {result = result + \", \" + entry.name;}); bot.say(from, \"Commands: \" + result);})","_id":"zJ0KBBAeQG9L1umQ"}
