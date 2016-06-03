@@ -6,7 +6,7 @@ Simple customizable IRC bot built on node.js.
 
 > npm install nodeIRCbot
 
-Edit the config options in server.js
+Edit the config options in config.json
 
 > npm start
 
@@ -16,13 +16,13 @@ You may also need to grab the dependencies by doing
 
 # Usage
 
-To test installation:
+To test installation, type in IRC:
 
-!help
+> !help
 
 To create new commands or update existing ones:
 
-!addcmd [name of command] [text command will output]
+> !addcmd [name of command] [text command will output]
 
 If you screw up and want to reset all commands do
 

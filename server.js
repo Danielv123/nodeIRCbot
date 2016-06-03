@@ -1,15 +1,11 @@
 // nodeIRCbot by Daniel Vestol
 
-// Specify irc bot parameters and stuffs. Channels is an array, can be extended.
+// Specify irc bot parameters and stuffs in config.json. Channels is an array, can be extended.
 // Most networks works fine, for registering and using the TMI network look up the IRC library on npmjs.
-var config = {
-	channels: ["#bottesting"],
-	server: "irc.freenode.net",
-	botName: "_Sam",
-	retryCount: 10,
-	autoRejoin: true,
-	floodProtection: true
-};
+
+var fs = require('fs');
+// Load settings
+var config = JSON.parse(fs.readFileSync('./config.json'));
 
 // Require irc library
 var irc = require('irc');
@@ -24,7 +20,7 @@ db.commands = new Datastore({ filename: 'database/commands.db', autoload: true }
 
 // function to index words in string, used for security (what security?) and simplicity
 function wordify(sentence) {
-	return sentence.replace(/[;()-]/g, " ").replace(/\s+/g, " ").toLowerCase().split(" ");
+	return sentence.replace(/[;()-]/g, " ").replace(/\s+/g, " ").split(" ");
 }
 
 // Create commands from IRC without access to the server! Should probably be commented out if you are afraid of abuse.
@@ -59,6 +55,14 @@ db.commands.addcommand({
 	js:'message = wordify(text); returnString = ""; for(i = 2;message.length > i;i++){returnString = returnString + " " + message[i]};db.commands.addcommand({name:message[1], result:returnString});'
 });
 
+// Command to list all commands
+// Has to be dynamic as bot supports adding new commands very quickly
+db.commands.addcommand({
+	name:'!commands',
+	result:'',
+	js:'db.commands.find({}, function(err,doc){result = ""; doc.forEach(function(entry) {result = result + ", " + entry.name;}); bot.say(from, "Commands: " + result);})'
+});
+
 // Query command template
 /*
 db.commands.findOne({ name: '!help' }, function (err, doc) {
@@ -75,6 +79,20 @@ var bot = new irc.Client(config.server, config.botName, {
 	channels: config.channels
 });
 
+// Send messages from console
+// To send messages, use: #channelname message follows after than
+// You cannot execute your own commands.
+var stdin = process.openStdin();
+stdin.on('data', function(chunk) {
+	chunkified = chunk.toString('utf-8').split(' ');
+	result = '';
+	for (i = 1; chunkified.length > i; i++) {
+		result = result + ' ' + chunkified[i];
+	}
+	console.log(chunkified[0] + ' | ' + result);
+	bot.say(chunkified[0], result);
+});
+
 // Listen to and return messages
 bot.addListener("message", function(from, to, text, message) {
 	console.log(from + ' | ' + to + ' | ' + text);
@@ -82,14 +100,16 @@ bot.addListener("message", function(from, to, text, message) {
 	db.commands.findOne({name: wordify(text)[0]}, function(err, doc) {
 		// Is message is an indexed command, return its return value
 		if (doc) {
-			bot.say(to, doc.result)
+			if (doc.result != '') {
+				bot.say(to, doc.result)
+			}
 			// If command also includes code, run the code
 			if (doc.js) {
 				eval(doc.js);
 			}
 		} else {
 			// If it ain't a command, shut the fuck up and complain in silence
-			console.log('Command not found');
+			// console.log('Command not found');
 		}
 		
 	});
