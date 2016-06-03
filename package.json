@@ -1,6 +1,6 @@
 {
   "name": "nodeIRCbot",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Simple node IRC bot",
   "main": "server.js",
   "scripts": {
